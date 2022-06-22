@@ -1,4 +1,5 @@
 import {
+  BinaryTargetsEnvValue,
   ConnectorType,
   DataSource,
   EnvValue,
@@ -105,8 +106,12 @@ function renderProvider(provider: ConnectorType | string): string {
 function renderOutput(path: string | null): string {
   return path ? `output = "${path}"` : '';
 }
-function renderBinaryTargets(binaryTargets?: string[]): string {
-  return binaryTargets?.length ? `binaryTargets = ${JSON.stringify(binaryTargets)}` : '';
+function renderBinaryTargets(binTargets: BinaryTargetsEnvValue[]): string {
+  return `binaryTargets = ${JSON.stringify(
+    binTargets.map((envValue) =>
+      envValue.fromEnvVar ? `env("${envValue.fromEnvVar}")` : `"${envValue.value}"`
+    )
+  )}`;
 }
 function renderPreviewFeatures(previewFeatures: GeneratorConfig['previewFeatures']): string {
   return previewFeatures.length ? `previewFeatures = ${JSON.stringify(previewFeatures)}` : '';
@@ -141,7 +146,7 @@ function deserializeGenerator(generator: GeneratorConfig): string {
   return renderBlock('generator', name, [
     renderProvider(provider.value),
     renderOutput(output?.value || null),
-    renderBinaryTargets(binaryTargets as unknown as string[]),
+    renderBinaryTargets(binaryTargets),
     renderPreviewFeatures(previewFeatures)
   ]);
 }
