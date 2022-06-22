@@ -81,7 +81,11 @@ function renderOutput(path) {
     return path ? `output = "${path}"` : '';
 }
 function renderBinaryTargets(binTargets) {
-    return `binaryTargets = ${JSON.stringify(binTargets.map((envValue) => envValue.fromEnvVar ? `env("${envValue.fromEnvVar}")` : `"${envValue.value}"`))}`;
+    if (binTargets && binTargets.length > 0) {
+        const envValue = binTargets[0];
+        return `binaryTargets = ${envValue.fromEnvVar ? `env("${envValue.fromEnvVar}")` : `"${envValue.value}"`}`;
+    }
+    return '';
 }
 function renderPreviewFeatures(previewFeatures) {
     return previewFeatures.length ? `previewFeatures = ${JSON.stringify(previewFeatures)}` : '';

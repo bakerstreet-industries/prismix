@@ -107,11 +107,13 @@ function renderOutput(path: string | null): string {
   return path ? `output = "${path}"` : '';
 }
 function renderBinaryTargets(binTargets: BinaryTargetsEnvValue[]): string {
-  return `binaryTargets = ${JSON.stringify(
-    binTargets.map((envValue) =>
+  if (binTargets && binTargets.length > 0) {
+    const envValue = binTargets[0];
+    return `binaryTargets = ${
       envValue.fromEnvVar ? `env("${envValue.fromEnvVar}")` : `"${envValue.value}"`
-    )
-  )}`;
+    }`;
+  }
+  return '';
 }
 function renderPreviewFeatures(previewFeatures: GeneratorConfig['previewFeatures']): string {
   return previewFeatures.length ? `previewFeatures = ${JSON.stringify(previewFeatures)}` : '';
